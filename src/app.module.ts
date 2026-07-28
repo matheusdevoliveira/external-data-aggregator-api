@@ -8,11 +8,13 @@ import Redis from 'ioredis';
 
 import { validate } from './config/env.schema';
 import { User } from './modules/users/entities/user.entity';
+import { SearchHistory } from './modules/history/entities/search-history.entity';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { IntegrationsModule } from './modules/integrations/integrations.module';
 import { MarketModule } from './modules/market/market.module';
 import { RedisCacheModule } from './modules/cache/cache.module';
+import { HistoryModule } from './modules/history/history.module';
 import { CustomThrottlerGuard } from './modules/rate-limit/custom-throttler.guard';
 
 @Module({
@@ -31,7 +33,7 @@ import { CustomThrottlerGuard } from './modules/rate-limit/custom-throttler.guar
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
-        entities: [User],
+        entities: [User, SearchHistory],
         synchronize: false,
         logging: configService.get<string>('NODE_ENV') === 'development',
       }),
@@ -43,8 +45,8 @@ import { CustomThrottlerGuard } from './modules/rate-limit/custom-throttler.guar
         throttlers: [
           {
             name: 'default',
-            ttl: 60000, // Janela de 60 segundos
-            limit: 10,  // Padrão de 10 requisições por minuto
+            ttl: 60000,
+            limit: 10,
           },
         ],
         storage: new ThrottlerStorageRedisService(
@@ -60,12 +62,13 @@ import { CustomThrottlerGuard } from './modules/rate-limit/custom-throttler.guar
     AuthModule,
     IntegrationsModule,
     MarketModule,
+    HistoryModule,
   ],
   controllers: [],
   providers: [
     {
       provide: APP_GUARD,
-      useClass: CustomThrottlerGuard, // Aplica o Rate Limit de forma global na API
+      useClass: CustomThrottlerGuard,
     },
   ],
 })
