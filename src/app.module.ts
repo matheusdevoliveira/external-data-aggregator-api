@@ -15,6 +15,7 @@ import { IntegrationsModule } from './modules/integrations/integrations.module';
 import { MarketModule } from './modules/market/market.module';
 import { RedisCacheModule } from './modules/cache/cache.module';
 import { HistoryModule } from './modules/history/history.module';
+import { HealthModule } from './modules/health/health.module';
 import { CustomThrottlerGuard } from './modules/rate-limit/custom-throttler.guard';
 
 @Module({
@@ -63,6 +64,7 @@ import { CustomThrottlerGuard } from './modules/rate-limit/custom-throttler.guar
     IntegrationsModule,
     MarketModule,
     HistoryModule,
+    HealthModule,
   ],
   controllers: [],
   providers: [
