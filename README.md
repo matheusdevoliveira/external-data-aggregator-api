@@ -85,7 +85,7 @@ graph TD
 ### 1. Clonar o Repositório
 
 ```bash
-git clone https://github.com/SEU_USUARIO/external-data-aggregator-api.git
+git clone https://github.com/matheusdevoliveira/external-data-aggregator-api.git
 cd external-data-aggregator-api
 ```
 
