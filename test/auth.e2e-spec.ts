@@ -1,9 +1,9 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
-import { AppModule } from './../src/app.module';
+import { AppModule } from '../src/app.module';
 
-describe('App / Health (e2e)', () => {
+describe('Auth System (e2e)', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
@@ -26,13 +26,24 @@ describe('App / Health (e2e)', () => {
     await app.close();
   });
 
-  it('/health (GET) - deve retornar status 200 OK com as conexões ativas', () => {
+  it('POST /auth/login - deve rejeitar login com credenciais inválidas (HTTP 401)', () => {
     return (request as any)(app.getHttpServer())
-      .get('/health')
-      .expect(200)
-      .expect((res: any) => {
-        expect(res.body).toHaveProperty('status', 'ok');
-        expect(res.body.info).toHaveProperty('database');
-      });
+      .post('/auth/login')
+      .send({
+        email: 'emailinvalido@domain.com',
+        password: 'senhaIncorreta',
+      })
+      .expect(401);
+  });
+
+  it('POST /users - deve validar payload com ValidationPipe (HTTP 400 ao enviar e-mail inválido)', () => {
+    return (request as any)(app.getHttpServer())
+      .post('/users')
+      .send({
+        name: 'Matheus',
+        email: 'email-invalido-sem-@',
+        password: '123',
+      })
+      .expect(400);
   });
 });
