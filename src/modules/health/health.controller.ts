@@ -23,9 +23,7 @@ export class HealthController {
   @HealthCheck()
   check() {
     return this.health.check([
-      // 1. Verifica a conexão com o PostgreSQL
       () => this.db.pingCheck('database'),
-      // 2. Verifica a conectividade externa com a API da Brapi
       () => this.http.pingCheck('brapi_api', 'https://brapi.dev/api/quote/PETR4'),
     ]);
   }

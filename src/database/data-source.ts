@@ -1,7 +1,7 @@
 import { config } from 'dotenv';
 import { DataSource } from 'typeorm';
 
-config(); // Carrega o arquivo .env para o CLI do TypeORM
+config();
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -12,6 +12,6 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_DATABASE,
   entities: [__dirname + '/../**/*.entity{.ts,.js}'],
   migrations: [__dirname + '/migrations/*{.ts,.js}'],
-  synchronize: false, // OBRIGATÓRIO: false para usar migrations
+  synchronize: false,
   logging: process.env.NODE_ENV === 'development',
 });

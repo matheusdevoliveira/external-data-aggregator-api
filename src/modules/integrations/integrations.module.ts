@@ -7,7 +7,7 @@ import { ViaCepService } from './services/viacep.service';
 @Module({
   imports: [
     HttpModule.register({
-      timeout: 3000, // Timeout global de 3 segundos nas chamadas externas
+      timeout: 3000,
       maxRedirects: 3,
     }),
   ],

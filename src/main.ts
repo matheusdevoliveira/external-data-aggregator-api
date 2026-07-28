@@ -10,10 +10,8 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const logger = new Logger('Bootstrap');
 
-  // 1. Proteção de cabeçalhos HTTP via Helmet (OWASP)
   app.use(helmet());
 
-  // 2. Configuração estrita de CORS
   app.enableCors({
     origin: configService.get<string>('ALLOWED_ORIGINS')?.split(',') || '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
@@ -29,7 +27,6 @@ async function bootstrap() {
     }),
   );
 
-  // Configuração do Swagger OpenAPI
   const swaggerConfig = new DocumentBuilder()
     .setTitle('External Data Aggregator API')
     .setDescription(

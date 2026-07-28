@@ -21,16 +21,16 @@ export class SearchHistory {
   user!: User;
 
   @Column({ type: 'varchar', length: 50 })
-  provider!: string; // Ex: 'BRAPI', 'AWESOME_API', 'VIACEP'
+  provider!: string;
 
   @Column({ type: 'jsonb', name: 'query_params' })
-  queryParams!: Record<string, any>; // Ex: { "ticker": "PETR4" }
+  queryParams!: Record<string, any>;
 
   @Column({ type: 'int', name: 'response_status' })
-  responseStatus!: number; // Ex: 200, 404, 503
+  responseStatus!: number;
 
   @Column({ type: 'int', name: 'execution_time_ms' })
-  executionTimeMs!: number; // Tempo gasto em milissegundos
+  executionTimeMs!: number;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;

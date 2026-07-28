@@ -14,9 +14,7 @@ export class BrapiService {
 
     try {
       const response$ = this.httpService.get(url).pipe(
-        // 1. Aborta a tentativa se a API externa demorar mais de 3 segundos
         timeout(3000),
-        // 2. Em caso de erro de rede ou timeout, tenta novamente 3 vezes com tempo incremental (Backoff)
         retry({
           count: 3,
           delay: (error, retryCount) => {
@@ -26,7 +24,6 @@ export class BrapiService {
             return timer(retryCount * 500);
           },
         }),
-        // 3. Se todas as 3 tentativas falharem, trata a falha sem derrubar o sistema
         catchError((error) => {
           this.logger.error(`Falha definitiva ao comunicar com a Brapi API: ${error.message}`);
           if (error.response?.status === 404) {

@@ -28,7 +28,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       throw new UnauthorizedException('Usuário não encontrado ou inativo');
     }
 
-    // Retorna o usuário omitindo a senha
     const { passwordHash: _, ...userWithoutPassword } = user;
     return userWithoutPassword;
   }
