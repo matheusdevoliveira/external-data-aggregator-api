@@ -7,6 +7,7 @@ import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { IntegrationsModule } from './modules/integrations/integrations.module';
 import { MarketModule } from './modules/market/market.module';
+import { RedisCacheModule } from './modules/cache/cache.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { MarketModule } from './modules/market/market.module';
         logging: configService.get<string>('NODE_ENV') === 'development',
       }),
     }),
+    RedisCacheModule,
     UsersModule,
     AuthModule,
     IntegrationsModule,
