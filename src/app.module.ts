@@ -5,6 +5,8 @@ import { validate } from './config/env.schema';
 import { User } from './modules/users/entities/user.entity';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { IntegrationsModule } from './modules/integrations/integrations.module';
+import { MarketModule } from './modules/market/market.module';
 
 @Module({
   imports: [
@@ -29,6 +31,8 @@ import { AuthModule } from './modules/auth/auth.module';
     }),
     UsersModule,
     AuthModule,
+    IntegrationsModule,
+    MarketModule
   ],
   controllers: [],
   providers: [],
