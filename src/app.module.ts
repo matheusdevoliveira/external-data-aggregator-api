@@ -39,10 +39,14 @@ import { CustomThrottlerGuard } from './modules/rate-limit/custom-throttler.guar
         logging: configService.get<string>('NODE_ENV') === 'development',
       }),
     }),
+    // RedisCacheModule é @Global(), mas importamos explicitamente aqui
+    // para deixar claro que o ThrottlerModule depende do REDIS_CLIENT
+    // exportado por ele (necessário para o `inject` abaixo funcionar).
+    RedisCacheModule,
     ThrottlerModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
+      imports: [ConfigModule, RedisCacheModule],
+      inject: [ConfigService, 'REDIS_CLIENT'],
+      useFactory: (configService: ConfigService, redisClient: Redis) => ({
         throttlers: [
           {
             name: 'default',
@@ -50,15 +54,15 @@ import { CustomThrottlerGuard } from './modules/rate-limit/custom-throttler.guar
             limit: 10,
           },
         ],
-        storage: new ThrottlerStorageRedisService(
-          new Redis({
-            host: configService.get<string>('REDIS_HOST'),
-            port: configService.get<number>('REDIS_PORT'),
-          }),
-        ),
+        // Reaproveita o mesmo client Redis do RedisCacheModule, cujo
+        // ciclo de vida (incluindo disconnect() no onModuleDestroy)
+        // já é gerenciado pelo CacheService. Isso evita abrir uma
+        // segunda conexão Redis paralela que o Nest não sabe fechar
+        // ao encerrar a aplicação (causa do warning de worker
+        // "failed to exit gracefully" nos testes E2E).
+        storage: new ThrottlerStorageRedisService(redisClient),
       }),
     }),
-    RedisCacheModule,
     UsersModule,
     AuthModule,
     IntegrationsModule,
